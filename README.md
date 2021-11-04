@@ -82,3 +82,43 @@ name	messages_ready	messages_unacknowledged
 hello	0	0
 task_queue	0	3
 ```
+
+### Tutorial 3
+
+* Consumers
+
+Run processes on multiple terminals.
+
+```bash
+$ mvn  exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogs"
+```
+
+* Producer
+
+```bash
+$ for i in $(seq 1 5); do mvn compile exec:java -Dexec.mainClass="org.example.rabbitmq.sample.EmitLog" -Dexec.args="${i} message ..."; done
+```
+
+To confirm exchanges/bindings messages in the queue via `rabbitmqctl`, like this.
+
+```bash
+$ docker exec -it 9031af4c30b6 /opt/rabbitmq/sbin/rabbitmqctl list_exchanges
+Listing exchanges for vhost / ...
+...
+logs	fanout
+...
+```
+
+```bash
+$ docker exec -it 9031af4c30b6 /opt/rabbitmq/sbin/rabbitmqctl list_bindings
+Listing bindings for vhost /...
+source_name	source_kind	destination_name	destination_kind	routing_key	arguments
+	exchange	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	queue	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	[]
+	exchange	hello	queue	hello	[]
+	exchange	task_queue	queue	task_queue	[]
+	exchange	amq.gen-k-zmbwRfOHV9iuzrPe_DHA	queue	amq.gen-k-zmbwRfOHV9iuzrPe_DHA	[]
+	exchange	amq.gen--PTZWKmu0ji8AenOH-m3Gw	queue	amq.gen--PTZWKmu0ji8AenOH-m3Gw	[]
+logs	exchange	amq.gen--PTZWKmu0ji8AenOH-m3Gw	queue		[]
+logs	exchange	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	queue		[]
+logs	exchange	amq.gen-k-zmbwRfOHV9iuzrPe_DHA	queue		[]
+```
