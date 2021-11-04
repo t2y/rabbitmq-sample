@@ -155,3 +155,35 @@ direct_logs	exchange	amq.gen-QheCk9LQhE1oZ4nn9OK6qQ	queue	warning	[]
 ...
 ```
 
+### Tutorial 5
+
+* Consumers
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogsTopic" -Dexec.args="#"
+```
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogsTopic" -Dexec.args="kern.*"
+```
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogsTopic" -Dexec.args="*.critical"
+```
+
+* Producer
+
+```bash
+$ mvn compile exec:java -Dexec.mainClass="org.example.rabbitmq.sample.EmitLogTopic" -Dexec.args="kern.critical an error occurred"
+```
+
+To confirm bindings messages in the queue via `rabbitmqctl`, like this.
+
+```bash
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl list_bindings
+...
+topic_logs	exchange	amq.gen-HKqLpIRExiK8iOaBfPFN9g	queue	#	[]
+topic_logs	exchange	amq.gen-v1NpXf0NsbLnUpUPWM3siA	queue	*.critical	[]
+topic_logs	exchange	amq.gen-pjA_XL35Qqvd9NnQ7UOU8A	queue	kern.*	[]
+...
+```
