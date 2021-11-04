@@ -122,3 +122,36 @@ logs	exchange	amq.gen--PTZWKmu0ji8AenOH-m3Gw	queue		[]
 logs	exchange	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	queue		[]
 logs	exchange	amq.gen-k-zmbwRfOHV9iuzrPe_DHA	queue		[]
 ```
+
+### Tutorial 4
+
+* Consumers
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogsDirect" -Dexec.args="error"
+```
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.ReceiveLogsDirect" -Dexec.args="info warning error"
+```
+
+* Producer
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.EmitLogDirect" -Dexec.args="error something wrong"
+```
+
+To confirm bindings messages in the queue via `rabbitmqctl`, like this.
+
+```bash
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl list_bindings
+Listing bindings for vhost /...
+source_name	source_kind	destination_name	destination_kind	routing_key	arguments
+...
+direct_logs	exchange	amq.gen-P32Dj6LXEtxOXWdD7qu_UQ	queue	error	[]
+direct_logs	exchange	amq.gen-QheCk9LQhE1oZ4nn9OK6qQ	queue	error	[]
+direct_logs	exchange	amq.gen-QheCk9LQhE1oZ4nn9OK6qQ	queue	info	[]
+direct_logs	exchange	amq.gen-QheCk9LQhE1oZ4nn9OK6qQ	queue	warning	[]
+...
+```
+
