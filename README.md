@@ -12,7 +12,7 @@ $ docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-m
 ```
 
 * https://www.rabbitmq.com/download.html
-* https://registry.hub.docker.com/\_/rabbitmq/
+* https://registry.hub.docker.com/_/rabbitmq/
 
 access to http://localhost:15672/ , then you can log in by `guest/guest`.
 
@@ -102,7 +102,7 @@ $ for i in $(seq 1 5); do mvn compile exec:java -Dexec.mainClass="org.example.ra
 To confirm exchanges/bindings messages in the queue via `rabbitmqctl`, like this.
 
 ```bash
-$ docker exec -it 9031af4c30b6 /opt/rabbitmq/sbin/rabbitmqctl list_exchanges
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl list_exchanges
 Listing exchanges for vhost / ...
 ...
 logs	fanout
@@ -110,7 +110,7 @@ logs	fanout
 ```
 
 ```bash
-$ docker exec -it 9031af4c30b6 /opt/rabbitmq/sbin/rabbitmqctl list_bindings
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl list_bindings
 Listing bindings for vhost /...
 source_name	source_kind	destination_name	destination_kind	routing_key	arguments
 	exchange	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	queue	amq.gen-H3M0nn4ECZeI-k4-ZqptiQ	[]
