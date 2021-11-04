@@ -24,6 +24,8 @@ $ mvn compile
 
 ## How to run
 
+### Tutorial 1
+
 * Consumer
 
 ```bash
@@ -39,9 +41,44 @@ $ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.Send"
 To confirm messages via `rabbitmqctl`, like this.
 
 ```bash
-$ docker exec -it 9031af4c30b6 /opt/rabbitmq/sbin/rabbitmqctl list_queues
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl list_queues
 Timeout: 60.0 seconds ...
 Listing queues for vhost / ...
 name	messages
 hello	3
+```
+
+### Tutorial 2
+
+* Consumers
+
+Run processes on multiple terminals.
+
+```bash
+$ mvn exec:java -Dexec.mainClass="org.example.rabbitmq.sample.Worker"
+```
+
+* Producer
+
+```bash
+$ for i in $(seq 1 10); do mvn compile exec:java -Dexec.mainClass="org.example.rabbitmq.sample.NewTask" -Dexec.args="${i} message ..."; done
+```
+
+To delete a queue via `rabbitmqctl`, like this.
+
+```bash
+$ docker exec -it ${CONTAINERID} /opt/rabbitmq/sbin/rabbitmqctl delete_queue task_queue
+Deleting queue 'task_queue' on vhost '/' ...
+Queue was successfully deleted with 0 messages
+```
+
+To confirm unacknowledged messages in the queue via `rabbitmqctl`, like this.
+
+```bash
+$ docker exec -it ${CONTAINERID}  /opt/rabbitmq/sbin/rabbitmqctl list_queues name messages_ready messages_unacknowledged
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages_ready	messages_unacknowledged
+hello	0	0
+task_queue	0	3
 ```
