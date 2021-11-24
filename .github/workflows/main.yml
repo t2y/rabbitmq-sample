@@ -11,7 +11,7 @@ jobs:
         uses: t2y/gh-actions-sample/@v3
         with:
           who-to-greet: 'Mona the Octocat'
-          cli: ls /root
+          cli: ./mvnw test
       - run: echo random-number ${{ steps.foo.outputs.random-number }}
         shell: bash
       - run: echo result ${{ steps.foo.outputs.cli-result }}
