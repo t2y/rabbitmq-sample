@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: foo
-        uses: t2y/gh-actions-sample/@v2
+        uses: t2y/gh-actions-sample/@v3
         with:
           who-to-greet: 'Mona the Octocat'
           cli: ls /root
